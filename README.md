@@ -10,6 +10,6 @@ Proyecto de Sistemas Operativos de Sincronizacion entre Procesos
     supervisor -> proveedor;
     proveedor -> supervisor;
     supervisor -> Rattata;
-    Rattata -> "Servicio tecnico";
+    Rattata -> "servicio tecnico";
   }
 )
