@@ -5,7 +5,6 @@ Proyecto de Sistemas Operativos de Sincronizacion entre Procesos
   digraph G {
     size ="4,4";
     servicio-tecnico [shape=box];
-    servicio-tecnico -> supervisor [weight=8];
-    cajera -> servicio-tecnico;
+    "servicio tecnico" -> supervisor [weight=8];
   }
 )
