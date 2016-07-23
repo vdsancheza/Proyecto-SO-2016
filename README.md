@@ -7,5 +7,6 @@ Proyecto de Sistemas Operativos de Sincronizacion entre Procesos
     "servicio tecnico" [shape=box];
     "servicio tecnico" -> supervisor [weight=8];
     cajeras -> "servicio tecnico";
+    supervisor -> proveedor;
   }
 )
