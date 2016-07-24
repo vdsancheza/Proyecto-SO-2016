@@ -12,5 +12,11 @@ Proyecto de Sistemas Operativos de Sincronizacion entre Procesos
     supervisor -> guardia;
     guardia -> "servicio tecnico";
     supervisor -> reponedores;
+    "servicio tecnico" -> mercadeo;
+    mercadeo -> supervisor;
+    guardia -> cliente;
+    supervisor -> reponedor;
+    limpieza;
+    cliente -> cajeras;
   }
 )
