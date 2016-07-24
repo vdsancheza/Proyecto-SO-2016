@@ -18,8 +18,8 @@
 
 /* Estas funciones seran usadas para generar reportes! */
 /* Pasar un struct con los datos necesarios */
-void * reporteDiario(void *);
-void * reporteSemanal(void *);
+void reporteDiario(void *);
+void reporteSemanal(void *);
 
 static void * servicioTecnico(void *);
 static int nosVolvimosLocos();
@@ -64,7 +64,7 @@ static int nosVolvimosLocos()
 	return luz;
 }
 
-void * reporteDiario(void *reporte)
+void reporteDiario(void *reporte)
 {
 	// Hacerle casting a reporte e inicializarla
 	sem_wait(&reporteD);
@@ -73,7 +73,7 @@ void * reporteDiario(void *reporte)
 	sem_post(&reporteD);
 }
 
-void * reporteSemanal(void *reporte)
+void reporteSemanal(void *reporte)
 {
 	// Hacerle casting a reporte e inicializarla
 	sem_wait(&reporteS);
