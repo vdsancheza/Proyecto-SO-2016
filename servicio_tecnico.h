@@ -23,7 +23,6 @@ void encender_servicio_tecnico();
 void apagar_servicio_tecnico();
 void reporteDiario(void *);
 void reporteSemanal(void *);
-apagar_servicio_tecnico
 
 /* Funciones de nuestro modulo */
 void init_TI();
@@ -32,7 +31,7 @@ void join_TI();
 /* Funciones locales de nuestro modulo */
 static void * servicioTecnico(void *);
 static int    nosVolvimosLocos();
-static void * servicioTecnico(void *);
+static int    llamarACorpoelec(void *);
 
 // Variable para controlar si el modulo esta encendido o apagado.
 static sem_t estado;
