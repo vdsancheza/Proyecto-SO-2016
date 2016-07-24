@@ -71,23 +71,24 @@ static void * servicioTecnico(void *data)
 		sem_wait(&estado);
 			/* Si no hay luz.. */
 			if (!luz)
-				acabaDeLlegarLaLuz = llamarACorpoelec();
+			{
+				if (llamarACorpoelec())
+				{
+					printf("Llego la luz!\n");
+					encender_mitad_cajas(); // Esta funcion es del modulo de cajeras
+				}
+			}
 			else
-				acabaDeIrseLaLuz = nosVolvimosLocos();
-
-			if (acabaDeLlegarLaLuz)
 			{
-				printf("Llego la luz!\n");
-				encender_mitad_cajas(); // Esta funcion es del modulo de cajeras
-				acabaDeLlegarLaLuz = 0;
+				if (nosVolvimosLocos())
+				{
+					printf("Hubo un fallo de energia! Se prendio la plantas\n");
+					apagar_mitad_cajas(); // Esta funcion es del modulo de cajeras
+				}
 			}
+			
 
-			if (acabaDeIrseLaLuz)
-			{
-				printf("Hubo un fallo de energia! Se prendio la plantas\n");
-				apagar_mitad_cajas(); // Esta funcion es del modulo de cajeras
-				acabaDeIrseLaLuz = 0;
-			}
+			
 		sem_post(&estado);
 	}
 }
