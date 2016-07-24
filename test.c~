@@ -21,8 +21,8 @@ int main() //Loop principal
 	pthread_create(&IT, NULL, servicioTecnico, (void *)&data);
 
 	while(1){
-		if(rand() < RAND_MAX / 2){
-			sem_post(&data.fallo_de_energia);
+		if(rand() < RAND_MAX / 20){
+			sem_post(&data.fallo_de_energia);  //cada 1 segundo se produce al azar este fallo
 	    	}
 	    	sleep(1);
     	}

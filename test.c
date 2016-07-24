@@ -15,14 +15,14 @@ int main() //Loop principal
 {
 	pthread_t IT;
 	Shared data;
-	sem_init(&data.fallo_de_energia, 1, 0);
+	sem_init(&data.fallo_de_energia, 0, 0);
 	printf("Hello world!\n");
 	srand(time(NULL));
 	pthread_create(&IT, NULL, servicioTecnico, (void *)&data);
 
 	while(1){
-		if(rand() < RAND_MAX * 0.1){
-			sem_post(&data.fallo_de_energia);
+		if(rand() < RAND_MAX / 20){
+			sem_post(&data.fallo_de_energia);  //cada 1 segundo se produce al azar este fallo
 	    	}
 	    	sleep(1);
     	}
