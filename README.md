@@ -9,7 +9,8 @@ Proyecto de Sistemas Operativos de Sincronizacion entre Procesos
     cajeras -> "servicio tecnico";
     supervisor -> proveedor;
     proveedor -> supervisor;
-    supervisor -> Rattata;
-    Rattata -> "servicio tecnico";
+    supervisor -> guardia;
+    guardia -> "servicio tecnico";
+    supervisor -> reponedores;
   }
 )
