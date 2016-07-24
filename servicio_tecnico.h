@@ -16,14 +16,26 @@
 #include <semaphore.h>
 
 
-static int    nosVolvimosLocos();
-static void * servicioTecnico(void *);
-
 /* Estas funciones seran usadas para generar reportes!
  * Pasar un struct con los datos necesarios
  */
+void encender_servicio_tecnico();
+void apagar_servicio_tecnico();
 void reporteDiario(void *);
 void reporteSemanal(void *);
+apagar_servicio_tecnico
+
+/* Funciones de nuestro modulo */
+void init_TI();
+void join_TI();
+
+/* Funciones locales de nuestro modulo */
+static void * servicioTecnico(void *);
+static int    nosVolvimosLocos();
+static void * servicioTecnico(void *);
+
+// Variable para controlar si el modulo esta encendido o apagado.
+static sem_t estado;
 
 pthread_t TI;
 static sem_t reporteD, reporteS;
@@ -36,9 +48,10 @@ void init_TI()
 	pthread_create(&TI,NULL,servicioTecnico,NULL);
 	sem_init(&reporteD, 0, 1);
 	sem_init(&reporteS, 0, 1);
+	sem_init(&estado, 0, 1);
 }
 
-void close_TI()
+void join_TI()
 {
 	pthread_join(TI, null);
 }
@@ -50,49 +63,49 @@ static void * servicioTecnico(void *data)
 
 	while(1)
 	{
-		/* Si no hay luz.. */
-		if(!luz)
-		{
-			acabaDeLlegarLaLuz = llamarACorpoelec();
-		}
-		else
-		{
-			acabaDeIrseLaLuz = nosVolvimosLocos();
-		}
+		/*
+			se hace un wait a estado para verificar si nuestro modulo
+			esta encendido, el supervisor podra llamar a la funcion
+			apagar_servicio_tecnico() para apagar el modulo
+			cuando se cierre el mercado
+		*/
+		sem_wait(&estado);
+			/* Si no hay luz.. */
+			if (!luz)
+				acabaDeLlegarLaLuz = llamarACorpoelec();
+			else
+				acabaDeIrseLaLuz = nosVolvimosLocos();
 
-		if (acabaDeLlegarLaLuz)
-		{
-			printf("Llego la luz!\n");
-			encender_mitad_cajas(); // Esta funcion es del modulo de cajeras
-			acabaDeLlegarLaLuz = 0;
-		}
+			if (acabaDeLlegarLaLuz)
+			{
+				printf("Llego la luz!\n");
+				encender_mitad_cajas(); // Esta funcion es del modulo de cajeras
+				acabaDeLlegarLaLuz = 0;
+			}
 
-		if (acabaDeIrseLaLuz)
-		{
-			printf("Hubo un fallo de energia! Se prendio la plantas\n");
-			apagar_mitad_cajas(); // Esta funcion es del modulo de cajeras
-			acabaDeIrseLaLuz = 0;
-		}
+			if (acabaDeIrseLaLuz)
+			{
+				printf("Hubo un fallo de energia! Se prendio la plantas\n");
+				apagar_mitad_cajas(); // Esta funcion es del modulo de cajeras
+				acabaDeIrseLaLuz = 0;
+			}
+		sem_post(&estado);
 	}
 }
 
 /* Simula si se va la luz */
 static int nosVolvimosLocos()
 {
-	if(rand() < RAND_MAX * 0.1)
-	{
+	if (rand() < RAND_MAX * 0.1)
 		luz = 0;
-	}
 	return luz;
 }
 
 /* Simula que llegue la luz antes de irse */
 static int llamarACorpoelec()
 {
-	if(rand() < RAND_MAX * 0.4)
-	{
+	if (rand() < RAND_MAX * 0.4)
 		luz = 1;
-	}
 	return luz;
 }
 
@@ -112,6 +125,16 @@ void reporteSemanal(void *reporte)
 		printf("Generando reporte semanal");
 		// Imprimir data del reporte o guardarla
 	sem_post(&reporteS);
+}
+
+void apagar_servicio_tecnico()
+{
+	sem_wait(&estado);
+}
+
+void encender_servicio_tecnico()
+{
+	sem_post(&estado);
 }
 
 #endif
