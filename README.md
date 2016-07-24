@@ -16,7 +16,7 @@ Proyecto de Sistemas Operativos de Sincronizacion entre Procesos
     mercadeo -> supervisor;
     guardia -> cliente;
     supervisor -> reponedor;
-    limpieza;
+    cliente -> limpieza;
     cliente -> cajeras;
   }
 )
