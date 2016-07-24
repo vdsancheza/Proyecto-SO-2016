@@ -15,18 +15,20 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-static int luz = 0;
+
 static int    nosVolvimosLocos();
 static void * servicioTecnico(void *);
 
-/* Estas funciones seran usadas para generar reportes! 
- * Pasar un struct con los datos necesarios 
+/* Estas funciones seran usadas para generar reportes!
+ * Pasar un struct con los datos necesarios
  */
 void reporteDiario(void *);
 void reporteSemanal(void *);
 
 pthread_t TI;
 static sem_t reporteD, reporteS;
+static int luz = 1;
+
 
 void init_TI()
 {
@@ -43,21 +45,51 @@ void close_TI()
 
 static void * servicioTecnico(void *data)
 {
+	int acabaDeIrseLaLuz = 0;
+	int acabaDeLlegarLaLuz = 0;
+
 	while(1)
 	{
-		if(nosVolvimosLocos())
+		/* Si no hay luz.. */
+		if(!luz)
 		{
-			printf("Hubo un fallo de energia!\n");
+			acabaDeLlegarLaLuz = llamarACorpoelec();
+		}
+		else
+		{
+			acabaDeIrseLaLuz = nosVolvimosLocos();
+		}
 
-			// Esta funcion es del modulo de cajeras
-			apagar_mitad_cajas();
+		if (acabaDeLlegarLaLuz)
+		{
+			printf("Llego la luz!\n");
+			encender_mitad_cajas(); // Esta funcion es del modulo de cajeras
+			acabaDeLlegarLaLuz = 0;
+		}
+
+		if (acabaDeIrseLaLuz)
+		{
+			printf("Hubo un fallo de energia! Se prendio la plantas\n");
+			apagar_mitad_cajas(); // Esta funcion es del modulo de cajeras
+			acabaDeIrseLaLuz = 0;
 		}
 	}
 }
 
+/* Simula si se va la luz */
 static int nosVolvimosLocos()
 {
 	if(rand() < RAND_MAX * 0.1)
+	{
+		luz = 0;
+	}
+	return luz;
+}
+
+/* Simula que llegue la luz antes de irse */
+static int llamarACorpoelec()
+{
+	if(rand() < RAND_MAX * 0.4)
 	{
 		luz = 1;
 	}
@@ -81,72 +113,5 @@ void reporteSemanal(void *reporte)
 		// Imprimir data del reporte o guardarla
 	sem_post(&reporteS);
 }
-
-/* Estas funciones seran usadas para generar reportes! */
-/* Pasar un struct con los datos necesarios */
-void reporteDiario(void *);
-void reporteSemanal(void *);
-
-static void * servicioTecnico(void *);
-static int nosVolvimosLocos();
-
-pthread_t TI;
-static sem_t reporteD, reporteS;
-
-void init_TI()
-{
-	srand(time(NULL));
-	pthread_create(&TI,NULL,servicioTecnico,NULL);
-	sem_init(&reporteD, 0, 1);
-	sem_init(&reporteS, 0, 1);
-}
-
-void close_TI()
-{
-	pthread_join(TI, null);
-}
-
-static void * servicioTecnico(void *data)
-{
-	while(1)
-	{
-		if(nosVolvimosLocos())
-		{
-			printf("Hubo un fallo de energia!\n");
-
-			// Esta funcion es del modulo de cajeras
-			apagar_mitad_cajas();
-		}
-	}
-}
-
-static int nosVolvimosLocos()
-{
-	int luz = 0;
-	if(rand() < RAND_MAX * 0.1)
-	{
-		luz = 1;
-	}
-	return luz;
-}
-
-void reporteDiario(void *reporte)
-{
-	// Hacerle casting a reporte e inicializarla
-	sem_wait(&reporteD);
-		printf("Generando reporte diario");
-		// Imprimir data del reporte o guardarla
-	sem_post(&reporteD);
-}
-
-void reporteSemanal(void *reporte)
-{
-	// Hacerle casting a reporte e inicializarla
-	sem_wait(&reporteS);
-		printf("Generando reporte semanal");
-		// Imprimir data del reporte o guardarla
-	sem_post(&reporteS);
-}
-
 
 #endif
