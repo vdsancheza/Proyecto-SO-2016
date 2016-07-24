@@ -57,9 +57,6 @@ void join_TI()
 
 static void * servicioTecnico(void *data)
 {
-	int acabaDeIrseLaLuz = 0;
-	int acabaDeLlegarLaLuz = 0;
-
 	while(1)
 	{
 		/*
