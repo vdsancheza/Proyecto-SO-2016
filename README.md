@@ -1,10 +1,11 @@
 # Proyecto-SO-2016
 Proyecto de Sistemas Operativos de Sincronizacion entre Procesos
 
-<div style="text-align:center;">
+##  Grafo de dependencias entre modulos
+
 ![Alt text](http://g.gravizo.com/g?
   digraph G {
-    size ="4,4";
+    size ="8,8";
     "servicio tecnico";
     "servicio tecnico" -> supervisor [weight=8];
     cajeras -> "servicio tecnico";
@@ -21,4 +22,6 @@ Proyecto de Sistemas Operativos de Sincronizacion entre Procesos
     cliente -> cajeras;
   }
 )
-</div>
+
+
+     
